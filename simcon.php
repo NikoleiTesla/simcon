@@ -42,7 +42,6 @@
         if(!$row)
             echo "0";
         echo $row[0];
-        var_dump($row);
      }
      
      if($action == 'connect'){
@@ -56,11 +55,17 @@
        $statement->bindValue(':insertDT', $dt->format('c'));
        $statement->execute();
        echo $guid;
-
      }
      
-     
-
+     if($action =='disconnect'){
+       if($guid ==''){
+           return '';
+       }
+       $statement = $db->prepare('delete from simcon where conGUID = :domain');
+       $statement->bindValue(':guid', $guid);
+       $statement->execute();       
+     }
+  
 function jsonOutput($object){
   $result = json_encode($object);
   DebugMessage("Json encode: ".$result);

@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Simcon - Simultanious Connection Count</title>
+        <script src="simcon.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+   
+    
+    <body onload="initSimcon()">
+        <p> Simcon: Simultanious Connections to Website or Single page </p>
+        
+    <script type="text/javascript">
+        function initSimcon(){
+            simconSetup('http://localhost/simcon/simcon.php');
+            getConnections( function(result){
+            console.log('connections: '+result);
+
+            });
+        }
+        
+   </script>
+    </body>
+</html>
