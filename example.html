@@ -12,11 +12,11 @@
         <a href="example.html" target="_blank">Click to open another instance</a>
         <p>Close additional instances and check with Refresh connections if it counts down again</p>
         <button onclick="refreshSimcon()">Refresh connections</button>
-        
+         <button onclick="disconnect()">Disconnect disconnect</button>
         
     <script type="text/javascript">
         function initSimcon(){
-            simconSetup('http://localhost/simcon/simcon.php');
+            simconSetup('http://localhost/simcon/simcon.php'); //for local development
             connect();
             refreshSimcon();
 

@@ -14,7 +14,8 @@
                        "appname TEXT NOT NULL DEFAULT '', ".
                        "conGUID TEXT NOT NULL DEFAULT '', ".
                        "insertDT DATETIME NOT NULL )";
-     $db->busyTimeout(1000);
+     $db->busyTimeout(2000);
+     $db->exec('PRAGMA journal_mode = wal;');
      $db->exec($tableStructure);
      
      $action = '';
@@ -40,13 +41,12 @@
         $result = $db->query($select);
         $row = $result->fetchArray();
         if(!$row)
-            echo "0";
-        echo $row[0];
+            jsonOutput("0");
+        jsonOutput($row[0]);
      }
      
      if($action == 'connect'){
-       $db->exec('PRAGMA journal_mode = wal;');
-       $guid = com_create_guid();
+       $guid = createGuid();
        $dt = new DateTime();
        
        $statement = $db->prepare('insert into simcon(domain,appname,conGUID,insertDT) values(:domain, :app, :guid, :insertDT)');
@@ -55,27 +55,47 @@
        $statement->bindValue(':guid', $guid);
        $statement->bindValue(':insertDT', $dt->format('c'));
        $statement->execute();
-       echo $guid;
+       jsonOutput($guid);
      }
      
      if($action =='disconnect'){
        if($guid ==''){
            return '';
        }
-       $db->exec('PRAGMA journal_mode = wal;');
        $statement = $db->prepare('delete from simcon where conGUID = :guid');  
        $statement->bindValue(':guid', $guid);
        $statement->execute();       
-       echo "Disconnected: ".$guid;
+       jsonOutput("Disconnected: ".$guid);
      }
+     
+     if($action =='deleteAll'){
+       $statement = $db->prepare('delete from simcon'); 
+       $statement->execute();
+       jsonOutput("all Deleted: ");
+     }    
 
 unset($db);
 
 function jsonOutput($object){
-  $result = json_encode($object);
-  DebugMessage("Json encode: ".$result);
-  header('Content-type: application/json');
-  echo $result;
+  header("Access-Control-Allow-Origin: *");
+  echo $object;
 }    
+
+function createGuid(){
+    //if (function_exists('com_create_guid')){
+    //    return com_create_guid();
+    //}else{
+        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+        $charid = strtoupper(md5(uniqid(rand(), true)));
+        $hyphen = chr(45);// "-"
+        $uuid = ''
+                .substr($charid, 0, 8).$hyphen
+                .substr($charid, 8, 4).$hyphen
+                .substr($charid,12, 4).$hyphen
+                .substr($charid,16, 4).$hyphen
+                .substr($charid,20,12);               
+        return $uuid;
+    //}
+}
 
 ?>

@@ -1,4 +1,4 @@
-var serviceUri = 'http://samburu.at/App/simcon.php';
+var serviceUri = 'https://app.samburu.at/simcon/simcon.php';
 var appName = '';
 var guid = '';
 
@@ -37,17 +37,22 @@ function connect(){
 function disconnect(){
     $.get(serviceUri, {action: "disconnect", guid:guid})
             .done(function (result) {
-                console.log("Json: disconnect " + appName+' guid = '+result);               
-                guid = result;
+                console.log("Json: disconnect " + result);               
             })
             .fail(function (jqxhr, textStatus, error) {
                 var err = textStatus + ", " + error;
                 console.log("Request Failed: " + err);
-            });        
+            });   
+     var i=0;
+     for(i=1;i<1000;i++){
+         console.log('idle a bit to give ajax time before browser destroys '+i);
+     }    
 }
+
 function registerOnload(){
     console.log('Register unload eventListener');
     window.onbeforeunload = function(){
         disconnect();    
+        return null;
     };
 }
