@@ -8,14 +8,24 @@
     
     <body onload="initSimcon()">
         <p> Simcon: Simultanious Connections to Website or Single page </p>
+        <div>Currently there are <span id="contest">0</span> connections.</div>
+        <a href="example.html" target="_blank">Click to open another instance</a>
+        <p>Close additional instances and check with Refresh connections if it counts down again</p>
+        <button onclick="refreshSimcon()">Refresh connections</button>
+        
         
     <script type="text/javascript">
         function initSimcon(){
             simconSetup('http://localhost/simcon/simcon.php');
+            connect();
+            refreshSimcon();
+
+        }
+        function refreshSimcon(){
             getConnections( function(result){
             console.log('connections: '+result);
-
-            });
+            $("#contest").text(result);
+            });           
         }
         
    </script>

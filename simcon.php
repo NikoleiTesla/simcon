@@ -14,7 +14,7 @@
                        "appname TEXT NOT NULL DEFAULT '', ".
                        "conGUID TEXT NOT NULL DEFAULT '', ".
                        "insertDT DATETIME NOT NULL )";
-     
+     $db->busyTimeout(1000);
      $db->exec($tableStructure);
      
      $action = '';
@@ -45,6 +45,7 @@
      }
      
      if($action == 'connect'){
+       $db->exec('PRAGMA journal_mode = wal;');
        $guid = com_create_guid();
        $dt = new DateTime();
        
@@ -61,18 +62,20 @@
        if($guid ==''){
            return '';
        }
-       $statement = $db->prepare('delete from simcon where conGUID = :domain');
+       $db->exec('PRAGMA journal_mode = wal;');
+       $statement = $db->prepare('delete from simcon where conGUID = :guid');  
        $statement->bindValue(':guid', $guid);
        $statement->execute();       
+       echo "Disconnected: ".$guid;
      }
-  
+
+unset($db);
+
 function jsonOutput($object){
   $result = json_encode($object);
   DebugMessage("Json encode: ".$result);
   header('Content-type: application/json');
   echo $result;
-}     
-     
-     
+}    
 
 ?>
