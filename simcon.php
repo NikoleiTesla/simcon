@@ -14,7 +14,7 @@
                        "appname TEXT NOT NULL DEFAULT '', ".
                        "conGUID TEXT NOT NULL DEFAULT '', ".
                        "insertDT DATETIME NOT NULL )";
-     $db->busyTimeout(2000);
+     $db->busyTimeout(500); 
      $db->exec('PRAGMA journal_mode = wal;');
      $db->exec($tableStructure);
      
@@ -73,6 +73,14 @@
        $statement->execute();
        jsonOutput("all Deleted: ");
      }    
+     
+     if($action == 'list'){            
+        $select = "select * from simcon";
+        $result = $db->query($select);
+        while($row = $result->fetchArray()){
+            echo $row[0].' '.$row[1].' '.$row[2].' '.$row[3].' '.$row[4].'<br>';
+        }
+     }     
 
 unset($db);
 
