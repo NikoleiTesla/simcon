@@ -73,6 +73,14 @@
        $statement->execute();
        jsonOutput("all Deleted: ");
      }    
+     
+     if($action == 'list'){            
+        $select = "select * from simcon";
+        $result = $db->query($select);
+        while($row = $result->fetchArray()){
+            echo $row[0].' '.$row[1].' '.$row[2].' '.$row[3].' '.$row[4].'<br>';
+        }
+     }     
 
 unset($db);
 
